@@ -106,10 +106,10 @@ brokers, or webhook handlers without changing the Flower Steps.
 `FlowerSampleConfig` creates two event bus beans:
 
 ```text
-io.github.parkkevinsb.bloom.EventBus
+io.github.flowerjvm.bloom.EventBus
   -> native Bloom bus used by sample partner classes
 
-io.github.parkkevinsb.flower.core.event.EventBus
+io.github.flowerjvm.flower.core.event.EventBus
   -> BloomEventBus.wrap(bloom), used by Flower
 ```
 

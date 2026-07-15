@@ -14,11 +14,10 @@ plugins {
 }
 
 allprojects {
-    group = "io.github.parkkevinsb.flower.sample"
+    group = "io.github.flowerjvm.flower.sample"
     version = "0.1.0-SNAPSHOT"
 
     repositories {
-        mavenLocal()
         mavenCentral()
     }
 }

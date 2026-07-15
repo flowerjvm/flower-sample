@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("io.github.parkkevinsb.flower:flower-core:0.1.0-SNAPSHOT")
+    implementation("io.github.flowerjvm:flower-core:0.1.0")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testImplementation("org.assertj:assertj-core:3.25.3")
@@ -11,7 +11,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("io.github.parkkevinsb.flower.sample.basic.done.DoneFlowSample")
+    mainClass.set("io.github.flowerjvm.flower.sample.basic.done.DoneFlowSample")
 }
 
 fun registerSampleTask(taskName: String, mainClassName: String) {
@@ -25,33 +25,33 @@ fun registerSampleTask(taskName: String, mainClassName: String) {
 
 registerSampleTask(
     "runDoneFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.done.DoneFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.done.DoneFlowSample"
 )
 registerSampleTask(
     "runStayFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.stay.StayFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.stay.StayFlowSample"
 )
 registerSampleTask(
     "runGoToFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.gotoexample.GoToFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.gotoexample.GoToFlowSample"
 )
 registerSampleTask(
     "runEventFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.event.EventFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.event.EventFlowSample"
 )
 registerSampleTask(
     "runRepeatFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.repeat.RepeatFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.repeat.RepeatFlowSample"
 )
 registerSampleTask(
     "runFinishFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.finishfail.FinishFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.finishfail.FinishFlowSample"
 )
 registerSampleTask(
     "runFailFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.finishfail.FailFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.finishfail.FailFlowSample"
 )
 registerSampleTask(
     "runGuardFlowSample",
-    "io.github.parkkevinsb.flower.sample.basic.guard.GuardFlowSample"
+    "io.github.flowerjvm.flower.sample.basic.guard.GuardFlowSample"
 )
