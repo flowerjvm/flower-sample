@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("io.github.flowerjvm:flower-core:0.1.0")
+    implementation("io.github.flowerjvm:flower-core:0.1.1")
 
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.3")
     testImplementation("org.assertj:assertj-core:3.25.3")

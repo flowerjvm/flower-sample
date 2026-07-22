@@ -41,7 +41,7 @@ flower-sample/
 | `cafe-order`        | implemented | Spring Boot wiring, Worker submit, Step composition, Bloom request/reply |
 | `logistics-control` | implemented | self-driving warehouse Zones, shared robot capacity, queue back pressure |
 | `game-turn-battle`  | implemented | goTo turn loop, signal-only Bloom callbacks, persistent game state + web UI |
-| `durable-order`     | implemented | durable checkpoint/recovery beside a transient flow, H2 state, web UI |
+| `durable-order`     | implemented | durable checkpoint/recovery beside a transient flow, SQLite state, web UI |
 | `flower-basic-samples` | implemented | plain Java Engine/Worker/Flow/Step samples with console traces |
 
 See `SAMPLE_PROJECT_PLAN.md` for the design notes behind this layout.

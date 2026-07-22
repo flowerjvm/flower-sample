@@ -19,26 +19,37 @@ transient audit flow
   write-audit-finish
 ```
 
-The order flow is durable. Its checkpoint is stored in H2 through
+The order flow is durable. Its checkpoint is stored in SQLite through
 `flower-persistence-jdbc`. The audit flow is transient. It may run beside the
 durable order, but it does not write a checkpoint and disappears when the app
 process is stopped.
 
-Every visible order step uses Flower's `StepContext.startTimeout(...)` and
-`timedOut()` helpers to stay active for about five seconds. The `wait-payment`
-step waits indefinitely until the domain table says the order is paid, then
-shows a five-second confirmation before moving on.
+Every visible order step stays active for about five seconds. Durable Steps do
+not use Flower's runtime-only `StepContext.startTimeout(...)`; they compare the
+Flower clock with an epoch-millis start time in the domain-owned
+`sample_order_step_timer` table instead. Starting the same Step again during
+recovery does not reset that timestamp. The `wait-payment` step waits
+indefinitely until the domain table says the order is paid, then shows a
+five-second confirmation before moving on. The transient audit Flow uses the
+runtime timeout helper because it is not recovered.
 
-The domain state also lives in H2. This is the important Flower pattern:
+The domain state lives in the same SQLite file. This is the important Flower
+pattern for a locally installed desktop or agent application:
 
 ```text
 Flower checkpoint = where to resume
 Order table       = what is true about the business
 ```
 
+The sample database is `build/durable-order-data.db`. SQLite keeps the sample
+self-contained while still exercising a real durable file across application
+restarts. The JDBC URL enables WAL mode and a busy timeout; the sample runs as
+one application process against the local file.
+
 ## Running
 
-Install the upstream snapshot first if needed:
+Dependencies resolve from Maven Central. To test an unpublished local Flower
+build, install the sibling checkout first:
 
 ```bash
 cd ../flower && mvn install

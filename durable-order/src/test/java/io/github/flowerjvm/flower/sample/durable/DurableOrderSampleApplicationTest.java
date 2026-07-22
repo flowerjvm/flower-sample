@@ -16,7 +16,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-        properties = "spring.datasource.url=jdbc:h2:mem:durable-order-test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL")
+        properties = {
+                "spring.datasource.url=jdbc:sqlite:file:durable-order-test?mode=memory&cache=shared&busy_timeout=5000",
+                "spring.datasource.driver-class-name=org.sqlite.JDBC",
+                "spring.datasource.hikari.maximum-pool-size=1",
+                "flower.persistence.jdbc.dialect=sqlite"
+        })
 class DurableOrderSampleApplicationTest {
 
     @Autowired
@@ -42,6 +47,7 @@ class DurableOrderSampleApplicationTest {
 
         rest.postForEntity("/api/orders/ORDER-RECOVER/pay", null, Map.class);
         awaitStatus("ORDER-RECOVER", OrderStatus.COMPLETED);
+        awaitCheckpointMissing("ORDER-RECOVER");
 
         ResponseEntity<Map> completed = rest.getForEntity("/api/state", Map.class);
         assertThat(completed.getBody()).isNotNull();
@@ -58,6 +64,16 @@ class DurableOrderSampleApplicationTest {
         assertThat(state.getBody().get("checkpoints").toString()).doesNotContain("audit");
     }
 
+    @Test
+    void restartingSameDurableStepDoesNotResetItsPersistedTimer() {
+        orders.createOrder("ORDER-TIMER");
+        orders.startStepTimer("ORDER-TIMER", "validate-order", 1_000L);
+        orders.startStepTimer("ORDER-TIMER", "validate-order", 5_000L);
+
+        assertThat(orders.stepTimerElapsed("ORDER-TIMER", "validate-order", 6_000L, 5_000L))
+                .isTrue();
+    }
+
     private void awaitStatus(String orderId, OrderStatus status) throws InterruptedException {
         long deadline = System.currentTimeMillis() + 60_000L;
         while (System.currentTimeMillis() < deadline) {
@@ -68,5 +84,18 @@ class DurableOrderSampleApplicationTest {
             Thread.sleep(100L);
         }
         throw new AssertionError("order did not reach " + status + ": " + orderId);
+    }
+
+    private void awaitCheckpointMissing(String orderId) throws InterruptedException {
+        long deadline = System.currentTimeMillis() + 60_000L;
+        while (System.currentTimeMillis() < deadline) {
+            ResponseEntity<Map> state = rest.getForEntity("/api/state", Map.class);
+            if (state.getBody() != null
+                    && !state.getBody().get("checkpoints").toString().contains(orderId)) {
+                return;
+            }
+            Thread.sleep(100L);
+        }
+        throw new AssertionError("checkpoint was not removed: " + orderId);
     }
 }

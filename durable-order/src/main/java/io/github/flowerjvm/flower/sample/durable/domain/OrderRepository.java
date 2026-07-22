@@ -97,6 +97,28 @@ public class OrderRepository {
         return order.isPaymentReceived();
     }
 
+    public void startStepTimer(String orderId, String stepId, long startedAtMillis) {
+        require(orderId);
+        jdbc.update(
+                "INSERT INTO sample_order_step_timer (order_id, step_id, started_at_millis) "
+                        + "VALUES (?, ?, ?) "
+                        + "ON CONFLICT(order_id) DO UPDATE SET "
+                        + "step_id = excluded.step_id, started_at_millis = excluded.started_at_millis "
+                        + "WHERE sample_order_step_timer.step_id <> excluded.step_id",
+                orderId,
+                stepId,
+                startedAtMillis);
+    }
+
+    public boolean stepTimerElapsed(String orderId, String stepId, long nowMillis, long delayMillis) {
+        List<Long> started = jdbc.query(
+                "SELECT started_at_millis FROM sample_order_step_timer WHERE order_id = ? AND step_id = ?",
+                (rs, rowNum) -> rs.getLong("started_at_millis"),
+                orderId,
+                stepId);
+        return !started.isEmpty() && nowMillis >= started.get(0) + delayMillis;
+    }
+
     public void reserveInventory(String orderId) {
         OrderRecord order = require(orderId);
         if (order.getStatus() == OrderStatus.PAID) {
@@ -158,6 +180,7 @@ public class OrderRepository {
     public void resetAll() {
         jdbc.update("DELETE FROM flower_flow_checkpoint");
         jdbc.update("DELETE FROM sample_audit_event");
+        jdbc.update("DELETE FROM sample_order_step_timer");
         jdbc.update("DELETE FROM sample_order");
     }
 

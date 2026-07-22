@@ -4,14 +4,14 @@ plugins {
 }
 
 dependencies {
-    implementation("io.github.flowerjvm:flower-spring-boot-starter:0.1.0")
-    implementation("io.github.flowerjvm:flower-persistence-jdbc:0.1.0")
+    implementation("io.github.flowerjvm:flower-spring-boot-starter:0.1.1")
+    implementation("io.github.flowerjvm:flower-persistence-jdbc:0.1.1")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
 
-    runtimeOnly("com.h2database:h2")
+    runtimeOnly("org.xerial:sqlite-jdbc:3.46.1.0")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
