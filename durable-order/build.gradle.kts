@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation("io.github.flowerjvm:flower-spring-boot-starter:0.1.1")
-    implementation("io.github.flowerjvm:flower-persistence-jdbc:0.1.1")
+    implementation("io.github.flowerjvm:flower-spring-boot-starter:0.1.2")
+    implementation("io.github.flowerjvm:flower-persistence-jdbc:0.1.2")
 
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
